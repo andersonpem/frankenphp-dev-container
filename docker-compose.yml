@@ -12,5 +12,12 @@ services:
     ports:
       - "4043:443"
     volumes:
-      - ./src:/app
-      - ./docker/Caddyfile:/etc/caddy/Caddyfile
+      - ./src:/app:rw
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:rw
+      - caddy_data:/data/caddy
+      - caddy_config:/config/caddy
+volumes:
+  caddy_data:
+      driver: local
+  caddy_config:
+      driver: local
