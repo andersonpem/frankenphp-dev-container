@@ -18,7 +18,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "4043:443"
+      - "8080:80" # HTTP
+      - "443:443" # HTTPS
+      - "443:443/udp" # HTTP/3
     volumes:
       - ./src:/app:rw
       - ./docker/Caddyfile:/etc/caddy/Caddyfile:rw
