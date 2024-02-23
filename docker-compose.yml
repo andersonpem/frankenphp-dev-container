@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  fphp-workshop:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "4043:443"
+    volumes:
+      - ./src:/app
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile
