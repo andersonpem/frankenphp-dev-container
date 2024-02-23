@@ -9,6 +9,7 @@ services:
       - DOCUMENT_ROOT=/app/public
       - APP_ENV=local
       - APP_DEBUG=true
+      - FIX_FILE_PERMISSIONS_ON_START=true
     ports:
       - "4043:443"
     volumes:

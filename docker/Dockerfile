@@ -47,7 +47,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     git unzip curl wget locales \
     python3 python3-pip python3-tqdm \
     default-mysql-client \
-    libnss3-tools libnss3 \
+    libnss3-tools libnss3 procps htop\
     python3-pyfiglet -y > /dev/null
 
 RUN install-php-extensions \
@@ -60,6 +60,8 @@ RUN install-php-extensions \
     ssh2 \
     redis \
     yaml
+
+WORKDIR /root
 
 ADD docker/sh/aliases.sh .aliases
 ADD docker/sh/includes.sh /opt/includes
@@ -87,6 +89,7 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # Let's set up the Docker user's environment :)
 USER docker
 WORKDIR /home/docker
+ADD docker/sh/aliases.sh .aliases
 
 RUN setup_env
 #RUN echo "USER=\$(whoami)\n$(cat ~/.bashrc)" > ~/.bashrc
@@ -111,7 +114,7 @@ RUN chown -R docker:docker /data/caddy && chown -R docker:docker /config/caddy
 ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workshop
 
 USER docker
-WORKDIR /app
+WORKDIR ${PROJECT_ROOT}
 
 ENV XDEBUG_ENABLE=1
 ENV OPCAHE_ENABLE=0
