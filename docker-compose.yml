@@ -5,11 +5,18 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
     environment:
-      - PROJECT_ROOT=/app
-      - DOCUMENT_ROOT=/app/public
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - FIX_FILE_PERMISSIONS_ON_START=true
+      SERVER_NAME: localhost
+      PROJECT_ROOT: /app
+      DOCUMENT_ROOT: /app/public
+      APP_ENV: dev
+      APP_DEBUG: true
+      FIX_FILE_PERMISSIONS_ON_START: true
+      PHP_IDE_CONFIG: "serverName=frankenphp"
+      XDEBUG_ENABLE: 1
+      XDEBUG_START_WITH_REQUEST: yes
+      XDEBUG_MODE: debug,develop
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "4043:443"
     volumes:
