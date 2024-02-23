@@ -4,6 +4,11 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
+    environment:
+      - PROJECT_ROOT=/app
+      - DOCUMENT_ROOT=/app/public
+      - APP_ENV=local
+      - APP_DEBUG=true
     ports:
       - "4043:443"
     volumes:

@@ -15,7 +15,7 @@ FROM --platform=$TARGETPLATFORM dunglas/frankenphp:1.1.0-php${PHP_VERSION}-bookw
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV PROJECT_ROOT /app
-
+ENV DOCUMENT_ROOT /app/public
 # Metadata
 LABEL org.opencontainers.image.title = 'FrankenPHP Workshop'
 LABEL org.opencontainers.image.description = 'The modern PHP app server. With all dev workspace batteries included.'
