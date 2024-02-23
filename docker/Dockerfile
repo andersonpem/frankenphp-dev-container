@@ -113,8 +113,15 @@ RUN mkdir -p /home/docker/node_modules \
 
 RUN npm install -g yarn@latest
 
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
+RUN sudo apt install symfony-cli -y
+
+RUN COMPOSER_HOME="/home/docker/.config/composer" composer global require laravel/installer
+
 USER root
 WORKDIR /root
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN mkdir -p /root/.composer
 
 RUN setup_env
 RUN sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \

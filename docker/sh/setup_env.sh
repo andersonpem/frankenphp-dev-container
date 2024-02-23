@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+CURRENT_USER=$(whoami)
 cd $HOME || exit
-echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
-echo "export LANG=en_US.UTF-8" >> ~/.bashrc
-echo "export PATH=~/.config/composer/vendor/bin:$PATH" >> $HOME/.bashrc
-echo "export PATH=~/.config/composer/vendor/bin" >> $HOME/.zshrc
-
-current_user=$(whoami)
+echo "export LC_ALL=en_US.UTF-8" >> $HOME/.bashrc
+echo "export LANG=en_US.UTF-8" >> $HOME/.bashrc
+echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.bashrc
+echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.zshrc
+mkdir -p /home/$CURRENT_USER/.config/composer/vendor/bin
 
 composer global require bamarni/symfony-console-autocomplete > /dev/null
 
