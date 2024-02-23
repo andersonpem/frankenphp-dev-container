@@ -102,10 +102,11 @@ USER docker
 WORKDIR /home/docker
 ADD docker/sh/aliases.sh .aliases
 RUN setup_env
-#RUN echo "USER=\$(whoami)\n$(cat ~/.bashrc)" > ~/.bashrc
+
 RUN sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     sudo locale-gen en_US.UTF-8
 
+# Set a home for Node and install Yarn
 RUN mkdir -p /home/docker/node_modules \
     && echo 'export PATH="/home/docker/node_modules/bin:$PATH"' >> /home/docker/.bashrc \
     && sudo -u docker npm config set prefix '/home/docker/node_modules'
@@ -116,7 +117,6 @@ USER root
 WORKDIR /root
 
 RUN setup_env
-#RUN echo "USER=\$(whoami)\n$(cat ~/.bashrc)" > ~/.bashrc
 RUN sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     sudo locale-gen en_US.UTF-8
 
@@ -126,6 +126,7 @@ RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp
 # Permissions to write in the Caddy directories
 RUN chown -R docker:docker /data/caddy && chown -R docker:docker /config/caddy
 
+# Add the entrypoint
 ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workshop
 
 USER docker
