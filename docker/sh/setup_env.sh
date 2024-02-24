@@ -27,7 +27,7 @@ clear
 CONTAINER_VERSION=${CONTAINER_VERSION:-"unknown"}
 
 if [ "$(whoami)" = "docker" ]; then
-  figlet "FrankenPHP Workshop"
+  figlet "FrankenPHP Workspace"
   cPrint status "Welcome, developer!"
   if [ -d "$HOME/.ssh" ]; then
     cPrint status "Adding the SSH agent to your container..."
