@@ -242,6 +242,13 @@ else
 fi
 
 
+if [ -n "$GIT_USER_NAME" ] && [ "$GIT_USER_NAME" != "" ] && [ -n "$GIT_USER_EMAIL" ] && [ "$GIT_USER_EMAIL" != "" ]; then
+    cPrint status "Setting up git username and email..."
+    git config --global user.name "$GIT_USER_NAME"
+    git config --global user.email "$GIT_USER_EMAIL"
+    cPrint success "Git username and email set."
+fi
+
 cPrint status "FrankenPHP will now start..."
 
 # first arg is `-f` or `--some-option`

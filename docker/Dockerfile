@@ -136,8 +136,12 @@ RUN chown -R docker:docker /data/caddy && chown -R docker:docker /config/caddy
 # Add the entrypoint
 ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workshop
 
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
 USER docker
 WORKDIR ${PROJECT_ROOT}
+
+
 
 ENTRYPOINT ["/usr/local/bin/frankenphp-workshop"]
 CMD ["--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

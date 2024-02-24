@@ -1,26 +1,28 @@
 version: "3.9"
 services:
-  fphp-workshop:
+  workspace:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
     environment:
-      SERVER_NAME: localhost
-      PROJECT_ROOT: /app
-      DOCUMENT_ROOT: /app/public
-      APP_ENV: dev
-      APP_DEBUG: true
-      FIX_FILE_PERMISSIONS_ON_START: true
-      PHP_IDE_CONFIG: "serverName=frankenphp"
-      XDEBUG_ENABLE: 1
-      XDEBUG_START_WITH_REQUEST: yes
-      XDEBUG_MODE: debug,develop
+      SERVER_NAME: ${SERVER_NAME}
+      PROJECT_ROOT: ${PROJECT_ROOT}
+      DOCUMENT_ROOT: ${DOCUMENT_ROOT}
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      FIX_FILE_PERMISSIONS_ON_START: ${FIX_FILE_PERMISSIONS_ON_START}
+      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+      XDEBUG_ENABLE: ${XDEBUG_ENABLE}
+      XDEBUG_START_WITH_REQUEST: ${XDEBUG_START_WITH_REQUEST}
+      XDEBUG_MODE: ${XDEBUG_MODE}
+      GIT_USER_NAME: ${GIT_USER_NAME}
+      GIT_USER_EMAIL: ${GIT_USER_EMAIL}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "8080:80" # HTTP
-      - "443:443" # HTTPS
-      - "443:443/udp" # HTTP/3
+      - "${PORT_HTTP}:80" # HTTP
+      - "${PORT_HTTPS}:443" # HTTPS
+      - "${PORT_HTTPS3}:443/udp" # HTTP/3
     volumes:
       - ./src:/app:rw
       - ./docker/Caddyfile:/etc/caddy/Caddyfile:rw
