@@ -138,6 +138,8 @@ ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workshop
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
+ADD ./docker/Caddyfile /etc/caddy/Caddyfile
+
 USER docker
 WORKDIR ${PROJECT_ROOT}
 
