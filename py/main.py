@@ -67,7 +67,9 @@ def get_user_input():
         db_user_password = input("Enter the password for the database user [password]: ").strip()
         if not db_user_password:
             db_user_password = "password"
-        db_port = input("Enter the port for the database: ").strip()
+        expose_db_port = input("Do you want to expose a port for the database? (yes/no): ").strip().lower()
+        if expose_db_port == "yes":
+            db_port = input("Enter the port for the database: ").strip()
 
     want_redis = input("Do you want to use Redis? (yes/no): [no] ").strip().lower()
     if want_redis in ["y", "yes"]:
@@ -75,9 +77,10 @@ def get_user_input():
     else:
         want_redis = "no"
 
-    redis_port = "6379"
     if want_redis and want_redis == "yes":
-        redis_port = input("Enter the port for Redis: ").strip()
+        expose_redis_port = input("Do you want to expose a port for Redis? (yes/no): ").strip().lower()
+        if expose_redis_port == "yes":
+            redis_port = input("Enter the port for Redis: ").strip()
 
     return db_choice.lower(), db_root_password, db_user, db_user_password, db_port, want_redis, redis_port
 
@@ -141,7 +144,8 @@ def build_docker_compose(db_choice, db_root_password, db_user, db_user_password,
             "MYSQL_USER": "${MYSQL_USER}",
             "MYSQL_PASSWORD": "${MYSQL_PASSWORD}"
         }
-        mysql_service["ports"] = ["${MYSQL_PORT:-3307}:3306"]
+        if db_port:
+            mysql_service["ports"] = [f"{db_port}:3306"]
         mysql_service["volumes"] = ["mysql_data:/var/lib/mysql"]
         docker_compose["services"]["mysql"] = mysql_service
         docker_compose["volumes"]["mysql_data"] = {"driver": "local"}
@@ -154,7 +158,8 @@ def build_docker_compose(db_choice, db_root_password, db_user, db_user_password,
             "POSTGRES_USER": "${POSTGRES_USER}",
             "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD}"
         }
-        postgres_service["ports"] = ["${POSTGRES_PORT:-5432}:5432"]
+        if db_port:
+            postgres_service["ports"] = [f"{db_port}:5432"]
         postgres_service["volumes"] = ["postgres_data:/var/lib/postgresql/data"]
         docker_compose["services"]["postgres"] = postgres_service
         docker_compose["volumes"]["postgres_data"] = {"driver": "local"}
@@ -162,7 +167,8 @@ def build_docker_compose(db_choice, db_root_password, db_user, db_user_password,
     if want_redis == "yes":
         redis_service = OrderedDict()
         redis_service["image"] = "redis"
-        redis_service["ports"] = ["${REDIS_PORT:-6379}:6379"]
+        if redis_port:
+            redis_service["ports"] = [f"{redis_port}:6379"]
         redis_service["volumes"] = ["redis-data:/data:rw"]
         docker_compose["services"]["redis"] = redis_service
         docker_compose["volumes"]["redis-data"] = {"driver": "local"}
