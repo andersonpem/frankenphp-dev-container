@@ -31,6 +31,27 @@ yaml.add_representer(OrderedDict, ordered_dict_representer)
 
 
 def get_user_input():
+    tip()
+    php_version_completer = WordCompleter(['8.1', '8.2', '8.3'], ignore_case=True)
+    php_version = prompt("Which PHP version do you want to use? (8.1/8.2/8.3): ", completer=php_version_completer)
+    while php_version not in ['8.1', '8.2', '8.3']:
+        print("Invalid PHP version. Please enter a valid version (8.1, 8.2, 8.3).")
+        php_version = prompt("Which PHP version do you want to use? (8.1/8.2/8.3): ", completer=php_version_completer)
+
+    node_version_completer = WordCompleter(['20', '18', '21', 'none'], ignore_case=True)
+    node_version = prompt("Which Node version do you want to use? (20 [LTS] / 18 [LTS] / 21 [Edge] / None): ",
+                          completer=node_version_completer)
+    while node_version not in ['20', '18', '21', 'none']:
+        print("Invalid Node version. Please enter a valid version (20, 18, 21, none).")
+        node_version = prompt("Which Node version do you want to use? (20 [LTS] / 18 [LTS] / 21 [Edge] / None): ",
+                              completer=node_version_completer)
+
+    if node_version == 'none':
+        node_version = ''
+
+    clear_screen()
+    titleBox("About your PHP project :)")
+    tip()
     has_project = input("Do you have a PHP project in the current folder or a sub-folder? (yes/no): ").strip().lower()
     folder_name = "."
 
@@ -46,10 +67,13 @@ def get_user_input():
             project_details = create_composer_project()
             folder_name = project_details['folder_name']
         else:
-            folder_name = input("Enter the folder name for the project: ").strip()
+            folder_name = input("Enter the folder name for a future/existing project: ").strip()
             if folder_name:
                 folder_name = f"./{folder_name}"
 
+    clear_screen()
+    titleBox("DB and Redis Configuration")
+    tip()
     db_choice = ""
     while db_choice.lower() not in ["pg", "mysql", "none"]:
         db_choice = input("Do you want a database? (PG/MySQL/None) [MySQL]:  ").strip()
@@ -85,8 +109,30 @@ def get_user_input():
     return db_choice.lower(), db_root_password, db_user, db_user_password, db_port, want_redis, redis_port
 
 
-def create_composer_project():
+def hr():
     print("=============================================================================================")
+
+
+def alert(msg, color="green", width=0):
+    color_codes = {
+        'red': '\033[91m',
+        'green': '\033[92m',
+        'blue': '\033[94m',
+        'magenta': '\033[95m',
+        'white': '\033[97m',
+        'purple': '\033[95m',
+        'yellow': '\033[93m'
+    }
+    print(f"{color_codes[color]}{msg:^{width}}\033[0m")
+
+
+def titleBox(title):
+    print(f"{'':*^100}")
+    alert(title, 'green', 100)
+    print(f"{'':*^100}")
+
+
+def create_composer_project():
     composer_completer = WordCompleter(['symfony/skeleton', 'laravel/laravel'], ignore_case=True)
     print("Please specify a composer project you want to create. \nExample: laravel/laravel, symfony/skeleton.\n[You "
           "can use tab to autocomplete].")
@@ -206,11 +252,16 @@ def write_files(docker_compose, env_content):
         file.write(env_content)
 
 
-def main():
-    print("=============================================================================================")
-    print("            Welcome to Canvas! The TuskWhale FrankenPHP Docker Compose Generator")
-    print("=============================================================================================")
+def tip():
+    alert("Tip: You can use tab and arrows to autocomplete and select!", "yellow")
 
+
+def clear_screen():
+    print("\033c")
+
+
+def main():
+    titleBox("Welcome to Canvas! The TuskWhale FrankenPHP Docker Compose Generator")
     db_choice, db_root_password, db_user, db_user_password, db_port, want_redis, redis_port = get_user_input()
     docker_compose = build_docker_compose(db_choice, db_root_password, db_user, db_user_password, db_port, want_redis,
                                           redis_port)
