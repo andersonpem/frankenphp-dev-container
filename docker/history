@@ -1,0 +1,20 @@
+composer config -g github-oauth.github.com "$COMPOSER_AUTH_GITHUB_TOKEN"
+rm -rf vendor && rm composer.lock && composer install
+phpunit --stop-on-failure
+bcs make:entity
+bcs make:controller
+bcs make:migration
+bcs doctrine:migrations:migrate
+bcs doctrine:migrations:diff
+bcs doctrine:database:drop --force
+bcs doctrine:database:create
+bcs doctrine:migrations:migrate
+bcs doctrine:schema:validate
+bcs debug:container --env-vars
+bcs debug:container
+composer install
+bcs cache:clear
+bcs debug:router
+bcs doctrine:schema:update
+bcs doctrine:migrations:version
+rm -rf vendor && composer install

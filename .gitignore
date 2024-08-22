@@ -2,3 +2,4 @@
 .idea
 src
 .env
+docker-compose.yml

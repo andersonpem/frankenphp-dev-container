@@ -215,13 +215,6 @@ if [ -f "$PROJECT_ROOT/bin/console" ]; then
       cPrint info "Symfony's doctrine:cache commands are not available. You are probably using Symfony 7 OR the doctrine cache component is not installed. Skipping..."
   fi
 
-#  if composer list --raw | grep -q 'dump-env'; then
-#    cPrint info "Dumping env vars... for environment $cl_success $APP_ENV $cl_reset"
-#    composer dump-env $APP_ENV
-#  else
-#      cPrint status "dump-env was not found in composer. Skipping..."
-#  fi
-
 
   if [[ "${MIGRATION_ENABLE}" == "true" ]]; then
       cPrint status "Running migrations"

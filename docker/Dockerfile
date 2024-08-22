@@ -1,7 +1,7 @@
 #FrankenPHP Workshop
 
 # Necessary Build Arguments
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.3
 ARG APP_ENV=dev
 ARG NODE_VERSION=20
 
@@ -13,6 +13,8 @@ RUN npm install -g npm@latest
 
 FROM --platform=$TARGETPLATFORM dunglas/frankenphp:1.1.0-php${PHP_VERSION}-bookworm
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 ENV PROJECT_ROOT /app
 ENV DOCUMENT_ROOT /app/public
@@ -50,7 +52,8 @@ RUN chmod +x /usr/local/bin/node /usr/local/bin/npm \
 
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install apt-utils redis-tools -y
 
-RUN DEBIAN_FRONTEND=noninteractive \
+RUN set -eux; \
+    DEBIAN_FRONTEND=noninteractive \
     apt install sudo openssl libssl-dev\
     acl iproute2 figlet \
     zsh gawk perl bash-completion \
@@ -59,9 +62,15 @@ RUN DEBIAN_FRONTEND=noninteractive \
     python3 python3-pip python3-tqdm \
     default-mysql-client \
     libnss3-tools libnss3 procps htop\
-    python3-pyfiglet -y > /dev/null
+    python3-pyfiglet libevent-dev -y > /dev/null
 
-RUN install-php-extensions \
+RUN set -eux; \
+    docker-php-ext-install sysvmsg sysvsem sysvshm
+
+RUN set -eux; \
+    install-php-extensions \
+    sockets \
+    event \
 	pdo_mysql \
 	gd \
 	intl \
@@ -120,7 +129,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN mkdir -p /root/.composer \
     && setup_env \
     && sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
-    && sudo locale-gen en_US.UTF-8 \
+    && sudo locale-gen en_US.UTF-8
 
 # Allow the user Docker to bind to http ports
 ARG USER=docker
@@ -129,7 +138,9 @@ RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp \
     && chown -R docker:docker /data/caddy && chown -R docker:docker /config/caddy
 
 # Add the entrypoint
-ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workshop
+ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workspace
+ADD --chmod=600 --chown=docker docker/history /home/docker/.bash_history
+ADD --chmod=600 --chown=docker docker/history /home/docker/.zsh_history
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
@@ -138,5 +149,5 @@ ADD ./docker/Caddyfile /etc/caddy/Caddyfile
 USER docker
 WORKDIR ${PROJECT_ROOT}
 
-ENTRYPOINT ["/usr/local/bin/frankenphp-workshop"]
+ENTRYPOINT ["/usr/local/bin/frankenphp-workspace"]
 CMD ["--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
