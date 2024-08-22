@@ -184,7 +184,7 @@ if [ ! -z "$PHP_VERSION" ]; then
       # Certificates and other Caddy data
       - caddy_data:/data
     ports:
-      - \${HTTP_PORT:-80}:80
+      - \${HTTP_PORT:-8080}:80
       - \${HTTPS_PORT:-443}:443
     extra_hosts:
       - "host.docker.internal:host-gateway"
