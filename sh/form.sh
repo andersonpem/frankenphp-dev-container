@@ -241,7 +241,6 @@ EOF
 fi
 
 # Add Redis service
-# Add Redis service
 if [ ! -z "$REDIS_VERSION" ]; then
   cat <<EOF >> docker-compose.yml
   redis:
