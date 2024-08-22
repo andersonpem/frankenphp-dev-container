@@ -24,6 +24,15 @@ gum style \
         --align center --width 70 --margin "1 2" --padding "2 4" \
         'FrankenPHP Workspace' 'Your modern PHP workspace. Batteries included.'
 
+# Ask for project root
+echo "Please enter the project root directory (relative to the current directory)"
+CODE_ROOT=$(gum input --value "src" --placeholder "Enter the project root directory (default: src)")
+if [ "$CODE_ROOT" = "user aborted" ]; then
+    echo "User aborted project root selection, exiting..."
+    exit 1
+fi
+CODE_ROOT=${CODE_ROOT:-src}
+
 # Ask for PHP version
 echo "Please choose a PHP version"
 PHP_VERSION=$(gum choose --height 15 {8.3,8.2,8.1,8.0})
@@ -163,15 +172,17 @@ if [ ! -z "$PHP_VERSION" ]; then
   workspace:
     image: phillarmonic/frankenphp-workspace:$PHP_VERSION-$NODE_VERSION
     environment:
-      PROJECT_ROOT: \${PROJECT_ROOT:-/app}
-      DOCUMENT_ROOT: \${DOCUMENT_ROOT:-/app/public}
-      XDEBUG_ENABLE: \${XDEBUG_ENABLE:-1}
+      PROJECT_ROOT: \${PROJECT_ROOT:-/var/www/html}
+      DOCUMENT_ROOT: \${DOCUMENT_ROOT:-/var/www/html/public}
+      XDEBUG_ENABLE: \${XDEBUG_ENABLE:-0}
       XDEBUG_MODE: \${XDEBUG_MODE:-develop,debug,profile,coverage}
       XDEBUG_START_WITH_REQUEST: \${XDEBUG_START_WITH_REQUEST:-yes}
       PHP_IDE_CONFIG: \${PHP_IDE_CONFIG:-"serverName=frankenphp"}
       PHP_INI_ERROR_REPORTING: \${PHP_INI_ERROR_REPORTING:-E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED}
     volumes:
-      - \${HOST_SOURCE_FOLDER:-/app}:\${PROJECT_ROOT:-/app}
+      - \${HOST_SOURCE_FOLDER:-./src}:\${PROJECT_ROOT:-/var/www/html}
+      # Certificates and other Caddy data
+      - caddy_data:/data
     ports:
       - \${HTTP_PORT:-80}:80
       - \${HTTPS_PORT:-443}:443
@@ -264,12 +275,14 @@ APP_ENV=dev
 APP_DEBUG=true
 
 SERVER_NAME=localhost
-PROJECT_ROOT=/app
-DOCUMENT_ROOT=/app/public
 
-PORT_HTTP=80
-PORT_HTTPS=443
-PORT_HTTPS3=443
+HOST_SOURCE_FOLDER=./$CODE_ROOT
+PROJECT_ROOT=/var/www/html
+DOCUMENT_ROOT=/var/www/html/public
+
+HTTP_PORT=80
+HTTPS_PORT=443
+HTTPS3_PORT=443
 
 FIX_FILE_PERMISSIONS_ON_START=true
 

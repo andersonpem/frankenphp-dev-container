@@ -3,22 +3,15 @@
 # Necessary Build Arguments
 ARG PHP_VERSION=8.3
 ARG APP_ENV=dev
-ARG NODE_VERSION=20
 ARG FRANKENPHP_VERSION=1.2
-
-# Stage 1: Use the official Node.js image to get Node.js and npm
-FROM node:${NODE_VERSION}-bookworm AS nodejs
-
-# Update NPM
-RUN npm install -g npm@latest
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-bookworm
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-ENV PROJECT_ROOT /app
-ENV DOCUMENT_ROOT /app/public
+ENV PROJECT_ROOT /var/www/html
+ENV DOCUMENT_ROOT /var/www/html/public
 
 ENV XDEBUG_ENABLE=0
 ENV OPCAHE_ENABLE=0
@@ -37,19 +30,6 @@ LABEL org.opencontainers.image.vendor = 'AndersonPEM <https://github.com/anderso
 LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmail.com>'
 LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
 #LABEL org.opencontainers.image.documentation=
-
-# Copy Node.js and npm from the Node.js image
-COPY --from=nodejs /usr/local/bin /usr/local/bin
-COPY --from=nodejs /usr/local/lib /usr/local/lib
-
-# Ensure binaries are executable and node_modules binaries are available
-RUN ln -s /usr/local/bin/node /usr/bin/node && \
-    ln -s /usr/local/bin/npm /usr/bin/npm && \
-    ln -s /usr/local/bin/npx /usr/bin/npx
-
-
-RUN chmod +x /usr/local/bin/node /usr/local/bin/npm \
-  /usr/local/bin/npx
 
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install apt-utils redis-tools -y
 
@@ -115,11 +95,6 @@ ADD docker/sh/aliases.sh .aliases
 RUN setup_env \
     && sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     sudo locale-gen en_US.UTF-8 \
-# Set a home for Node and install Yarn
-    && mkdir -p /home/docker/node_modules \
-    && echo 'export PATH="/home/docker/node_modules/bin:$PATH"' >> /home/docker/.bashrc \
-    && sudo -u docker npm config set prefix '/home/docker/node_modules' \
-    && npm install -g yarn@latest \
     && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash \
     && sudo apt install symfony-cli -y \
     && COMPOSER_HOME="/home/docker/.config/composer" composer global require laravel/installer

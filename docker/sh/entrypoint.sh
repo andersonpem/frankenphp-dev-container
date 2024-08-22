@@ -119,39 +119,6 @@ fi
 # | This is set in compose or compose override.
 # |
 
-if [ "$OPCACHE_ENABLE" = "0" ]; then
-  sudo rm -f "$PHP_INI_DIR/conf.d/opcache.ini"
-  cPrint info "$cl_info Opcache is disabled$cl_reset. To enable it, set the environment variable OPCACHE_ENABLE to 1"
-else
-cPrint info "Enabling Opcache by default. To override, set OPCACHE_ENABLE to 0..."
-  sudo --preserve-env bash -c 'cat <<EOF > $PHP_INI_DIR/conf.d/opcache.ini
-# opcache.ini
-[opcache]
-opcache.enable=1
-
-opcache.enable_cli=1
-
-; maximum memory that Opcache can use to store compiled PHP files, Symfony recommends 256
-opcache.memory_consumption=192
-
-; maximum number of files that can be stored in the cache
-opcache.max_accelerated_files=20000
-
-; validate on every request
-opcache.revalidate_freq=0
-
-; re-validate of timestamps, is set to false (0) by default, is overridden in local docker-compose
-opcache.validate_timestamps=0
-
-opcache.interned_strings_buffer=16
-
-opcache.fast_shutdown=1
-
-opcache.preload=$PROJECT_ROOT/config/preload.php
-opcache.preload_user=docker
-EOF'
-fi
-
 if [ -n "$XDEBUG_ENABLE" ] && [ "$XDEBUG_ENABLE" = "1" ]; then
   cPrint status "Env asks to enable XDebug, proceeding to enable..."
   sudo --preserve-env bash -c 'cat <<EOF > $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
