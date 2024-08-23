@@ -179,6 +179,9 @@ if [ ! -z "$PHP_VERSION" ]; then
       XDEBUG_START_WITH_REQUEST: \${XDEBUG_START_WITH_REQUEST:-yes}
       PHP_IDE_CONFIG: \${PHP_IDE_CONFIG:-"serverName=frankenphp"}
       PHP_INI_ERROR_REPORTING: \${PHP_INI_ERROR_REPORTING:-E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED}
+      # If you're using the local multi domain https feature, set the vhost here
+      # More info at https://github.com/Phillarmonic/domainpilot
+      DOMAINPILOT_VHOST: \${DOMAINPILOT_VHOST:-localhost}
     volumes:
       - \${HOST_SOURCE_FOLDER:-./src}:\${PROJECT_ROOT:-/var/www/html}
       # Certificates and other Caddy data
@@ -273,9 +276,18 @@ cat <<EOF >> .env
 APP_ENV=dev
 APP_DEBUG=true
 
+# If you're using an individual server, set its hostname here
 SERVER_NAME=localhost
 
-HOST_SOURCE_FOLDER=./$CODE_ROOT
+# If you're using the local https multi domain, set it here
+# Prefer addresses with .docker.local to avoid weird chrome behaviors.
+# More info at https://github.com/Phillarmonic/domainpilot
+DOMAINPILOT_VHOST=domainpilot.docker.local
+
+# This is the folder where your project is located in the current directory
+HOST_SOURCE_FOLDER=./src
+
+# This is the folder where your project will be located in the container
 PROJECT_ROOT=/var/www/html
 DOCUMENT_ROOT=/var/www/html/public
 
@@ -292,7 +304,7 @@ XDEBUG_START_WITH_REQUEST=yes
 XDEBUG_MODE=debug,develop
 
 # Set your db version here
-DATABASE_VERSION=8.0
+DATABASE_VERSION=
 
 # If using mysql and you need to change the data, do it here
 MYSQL_ROOT_PASSWORD=root
