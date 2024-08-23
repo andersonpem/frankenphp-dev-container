@@ -1,4 +1,4 @@
-name: "Backend: Symfony Worker"
+name: "FrankenPHP - Node 20"
 
 on:
   # Run jobs manually in GitHub's UI
@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PAT }}
 
-      - name: Build - with Node 18
+      - name: Build - with Node 20
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -38,9 +38,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            chespirito/php:${{ github.event.inputs.php_version }}-something
-            capivara/php:something-latest
+            phillarmonic/frankenphp-workspace:${{ github.event.inputs.php_version }}-node-20
           build-args: |
             PHP_VERSION=${{ github.event.inputs.php_version }}
             FRANKENPHP_VERSION=${{ github.event.inputs.php_version }}
-            NODE_VERSION=${{ github.event.inputs.php_version }}
+            NODE_VERSION=20
