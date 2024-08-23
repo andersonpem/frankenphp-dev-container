@@ -41,5 +41,5 @@ jobs:
             phillarmonic/frankenphp-workspace:${{ github.event.inputs.php_version }}-node-18
           build-args: |
             PHP_VERSION=${{ github.event.inputs.php_version }}
-            FRANKENPHP_VERSION=${{ github.event.inputs.php_version }}
+            FRANKENPHP_VERSION=${{ github.event.inputs.frankenphp_version }}
             NODE_VERSION=18

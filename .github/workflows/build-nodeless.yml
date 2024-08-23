@@ -41,4 +41,4 @@ jobs:
             phillarmonic/frankenphp-workspace:${{ github.event.inputs.php_version }}-nodeless
           build-args: |
             PHP_VERSION=${{ github.event.inputs.php_version }}
-            FRANKENPHP_VERSION=${{ github.event.inputs.php_version }}
+            FRANKENPHP_VERSION=${{ github.event.inputs.frankenphp_version }}
