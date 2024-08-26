@@ -60,8 +60,7 @@ RUN set -eux; \
     xdebug \
     ssh2 \
     redis \
-    yaml \
-    gd
+    yaml
 
 WORKDIR /root
 
