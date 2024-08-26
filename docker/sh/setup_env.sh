@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 CURRENT_USER=$(whoami)
 cd $HOME || exit
+
 echo "export LC_ALL=en_US.UTF-8" >> $HOME/.bashrc
 echo "export LANG=en_US.UTF-8" >> $HOME/.bashrc
-echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.bashrc
-echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.zshrc
+
+if [ "$CURRENT_USER" = "root" ]; then
+  echo "export PATH=/root/.config/composer/vendor/bin:$PATH" >> /root/.bashrc
+  echo "export PATH=/root/.config/composer/vendor/bin:$PATH" >> /root/.zshrc
+else
+  echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.bashrc
+  echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.zshrc
+fi
+
 mkdir -p /home/$CURRENT_USER/.config/composer/vendor/bin
 
 composer global require bamarni/symfony-console-autocomplete > /dev/null
