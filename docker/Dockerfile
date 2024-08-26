@@ -92,9 +92,10 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER docker
 WORKDIR /home/docker
 ADD docker/sh/aliases.sh .aliases
+RUN mount -o remount,suid /usr/bin
 RUN setup_env \
-    && sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    sudo locale-gen en_US.UTF-8 \
+    && sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+    && sudo locale-gen en_US.UTF-8 \
     && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash \
     && sudo apt install symfony-cli -y \
     && COMPOSER_HOME="/home/docker/.config/composer" composer global require laravel/installer
@@ -104,8 +105,8 @@ WORKDIR /root
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN mkdir -p /root/.composer \
     && setup_env \
-    && sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
-    && sudo locale-gen en_US.UTF-8
+    && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen en_US.UTF-8
 
 # Allow the user Docker to bind to http ports
 ARG USER=docker
