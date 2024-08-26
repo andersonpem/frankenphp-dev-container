@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+FRANKENPHP_VERSION="1.2"
+
 handle_sigint() {
     echo "Received SIGINT, exiting..."
     exit 1
@@ -165,12 +167,19 @@ if [ -f docker-compose.yml ]; then
     fi
 fi
 
+# Construct the image tag
+if [ -z "$NODE_VERSION" ] || [ "$NODE_VERSION" == "nodeless" ]; then
+  IMAGE_TAG="phillarmonic/frankenphp-workspace:$FRANKENPHP_VERSION-$PHP_VERSION"
+else
+  IMAGE_TAG="phillarmonic/frankenphp-workspace:$FRANKENPHP_VERSION-$PHP_VERSION-$NODE_VERSION"
+fi
+
 echo "services:" >> docker-compose.yml
 # Add PHP service
 if [ ! -z "$PHP_VERSION" ]; then
   cat <<EOF >> docker-compose.yml
   workspace:
-    image: phillarmonic/frankenphp-workspace:$PHP_VERSION-$NODE_VERSION
+    image: $IMAGE_TAG
     environment:
       PROJECT_ROOT: \${PROJECT_ROOT:-/var/www/html}
       DOCUMENT_ROOT: \${DOCUMENT_ROOT:-/var/www/html/public}
