@@ -104,7 +104,7 @@ RUN mkdir -p /root/.composer \
 USER docker
 WORKDIR /home/docker
 ADD docker/sh/aliases.sh .aliases
-ENV COMPOSER_HOME="$HOME/docker/.config/composer"
+ENV COMPOSER_HOME="$HOME/.config/composer"
 RUN setup_env \
     && composer global require laravel/installer
 
