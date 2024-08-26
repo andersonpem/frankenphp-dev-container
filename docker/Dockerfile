@@ -96,15 +96,16 @@ RUN mkdir -p /root/.composer \
     && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen en_US.UTF-8 \
     && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash \
-    && apt update && apt install symfony-cli -y
+    && apt update && apt install symfony-cli -y \
+    && mkdir -p /home/docker/.config/composer \
+    && chown -R docker:docker /home/docker
 
 # Let's set up the Docker user's environment :)
 USER docker
 WORKDIR /home/docker
 ADD docker/sh/aliases.sh .aliases
 ENV COMPOSER_HOME="$HOME/docker/.config/composer"
-RUN mkdir -p /home/docker/.config/composer \
-    && setup_env \
+RUN setup_env \
     && composer global require laravel/installer
 
 USER root
