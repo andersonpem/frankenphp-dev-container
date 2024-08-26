@@ -92,20 +92,25 @@ cPrint status "Checking proper file permissions..."
 cPrint info "Setting file ownership, please be patient... PROJECT_ROOT: $PROJECT_ROOT"
 sudo chown -R $DOCKER_USER:$DOCKER_USER "$PROJECT_ROOT"
 
-if [ -n "$FIX_FILE_PERMISSIONS_ON_START" ] && [ "$FIX_FILE_PERMISSIONS_ON_START" = "1" ]; then
-  # This part is cool, change the permissions only if they're not set already.
-  cPrint status "Setting file permissions, please be patient..."
-  sudo webpermissions $PROJECT_ROOT
-fi
-
-# Let's make sure the var folder is writable by the web server.
-cPrint status "Setting var folder permissions..."
-if [ -d "$PROJECT_ROOT/var" ]; then
-  sudo chown -R docker "$PROJECT_ROOT/var"
-  sudo chmod -R 775 "$PROJECT_ROOT/var"
+# Check if the project root is empty
+if [ -z "$(ls -A $PROJECT_ROOT)" ]; then
+  cPrint status "Project root is empty, skipping file permission changes."
 else
-  sudo mkdir -m 775 "$PROJECT_ROOT/var"
-  sudo chown docker "$PROJECT_ROOT/var"
+  if [ -n "$FIX_FILE_PERMISSIONS_ON_START" ] && [ "$FIX_FILE_PERMISSIONS_ON_START" = "1" ]; then
+    # This part is cool, change the permissions only if they're not set already.
+    cPrint status "Setting file permissions, please be patient..."
+    sudo webpermissions $PROJECT_ROOT
+  fi
+
+  # Let's make sure the var folder is writable by the web server.
+  cPrint status "Setting var folder permissions..."
+  if [ -d "$PROJECT_ROOT/var" ]; then
+    sudo chown -R docker "$PROJECT_ROOT/var"
+    sudo chmod -R 775 "$PROJECT_ROOT/var"
+  else
+    sudo mkdir -m 775 "$PROJECT_ROOT/var"
+    sudo chown docker "$PROJECT_ROOT/var"
+  fi
 fi
 
 # Bin utilities should be executable
