@@ -94,17 +94,18 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN mkdir -p /root/.composer \
     && setup_env \
     && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
-    && locale-gen en_US.UTF-8
+    && locale-gen en_US.UTF-8 \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash \
+    && apt update && apt install symfony-cli -y
 
 # Let's set up the Docker user's environment :)
 USER docker
 WORKDIR /home/docker
 ADD docker/sh/aliases.sh .aliases
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN setup_env \
-    && curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash \
-    && sudo apt install symfony-cli -y \
-    && COMPOSER_HOME="/home/docker/.config/composer" composer global require laravel/installer
+ENV COMPOSER_HOME="/$HOME/docker/.config/composer"
+RUN mkdir -p /home/docker/.config/composer \
+    && setup_env \
+    && composer global require laravel/installer
 
 USER root
 # Allow the user Docker to bind to http ports
