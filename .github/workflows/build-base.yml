@@ -38,7 +38,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            phillarmonic/frankenphp-workspace:${{ github.event.inputs.php_version }}-nodeless
+            phillarmonic/frankenphp-workspace:${{ github.event.inputs.php_version }}-base
           build-args: |
             PHP_VERSION=${{ github.event.inputs.php_version }}
             FRANKENPHP_VERSION=${{ github.event.inputs.frankenphp_version }}
