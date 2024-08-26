@@ -1,4 +1,4 @@
-name: "FrankenPHP - Nodeless"
+name: "FrankenPHP - Base"
 
 on:
   # Run jobs manually in GitHub's UI
