@@ -129,8 +129,5 @@ RUN chown -R docker:docker ${PROJECT_ROOT}
 USER docker
 WORKDIR ${PROJECT_ROOT}
 
-# Cleanup the apt cache and any other garbage
-RUN sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 ENTRYPOINT ["/usr/local/bin/frankenphp-workspace"]
 CMD ["--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
