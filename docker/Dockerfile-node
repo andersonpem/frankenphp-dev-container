@@ -1,9 +1,9 @@
 # FrankenPHP Workspace with Node.js
-ARG NODE_VERSION=20
 ARG FRANKENPHP_VERSION=1.2
 ARG PHP_VERSION=8.3
 # Use the base PHP Dockerfile as the starting point
 FROM phillarmonic/frankenphp-workspace:${FRANKENPHP_VERSION}-php-${PHP_VERSION}
+ARG NODE_VERSION=20
 
 # Metadata
 LABEL org.opencontainers.image.title = 'FrankenPHP Workspace with Node.js'
