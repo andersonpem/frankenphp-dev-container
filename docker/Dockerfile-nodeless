@@ -122,8 +122,9 @@ RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 ADD ./docker/Caddyfile /etc/caddy/Caddyfile
 
+RUN chown -R docker:docker ${PROJECT_ROOT}
+
 USER docker
-RUN sudo chown -R docker:docker ${PROJECT_ROOT}
 WORKDIR ${PROJECT_ROOT}
 
 ENTRYPOINT ["/usr/local/bin/frankenphp-workspace"]
