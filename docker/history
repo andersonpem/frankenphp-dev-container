@@ -1,6 +1,25 @@
 composer config -g github-oauth.github.com "$COMPOSER_AUTH_GITHUB_TOKEN"
 rm -rf vendor && rm composer.lock && composer install
 phpunit --stop-on-failure
+pa make:model
+pa make:controller
+pa make:migration
+pa migrate
+pa test
+pa db:seed
+pa clear-compiled
+pa down
+pa up
+pa inspire
+pa tinker
+pa cache:clear
+pa route:list
+pa migrate:rollback
+pa migrate:status
+pa migrate:refresh
+pa config:clear
+pa config:publish
+pa config:show
 bcs make:entity
 bcs make:controller
 bcs make:migration
@@ -18,3 +37,6 @@ bcs debug:router
 bcs doctrine:schema:update
 bcs doctrine:migrations:version
 rm -rf vendor && composer install
+symfony new .
+symfony new --webapp .
+symfony composer require api
