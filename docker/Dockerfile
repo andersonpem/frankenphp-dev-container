@@ -88,11 +88,20 @@ RUN useradd -m -d /home/docker -s /bin/bash docker && adduser docker sudo
 # Users in the sudoers group can sudo as root without password.
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+USER root
+WORKDIR /root
+RUN mount -o remount,suid /usr/bin
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN mkdir -p /root/.composer \
+    && setup_env \
+    && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen en_US.UTF-8
+
 # Let's set up the Docker user's environment :)
 USER docker
 WORKDIR /home/docker
 ADD docker/sh/aliases.sh .aliases
-RUN mount -o remount,suid /usr/bin
+ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN setup_env \
     && sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
     && sudo locale-gen en_US.UTF-8 \
@@ -101,13 +110,6 @@ RUN setup_env \
     && COMPOSER_HOME="/home/docker/.config/composer" composer global require laravel/installer
 
 USER root
-WORKDIR /root
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN mkdir -p /root/.composer \
-    && setup_env \
-    && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
-    && locale-gen en_US.UTF-8
-
 # Allow the user Docker to bind to http ports
 ARG USER=docker
 RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp \
