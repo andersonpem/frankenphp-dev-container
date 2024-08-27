@@ -150,51 +150,6 @@ else
   add_status_message "XDebug is disabled. To enable it, set XDEBUG_ENABLE to 1"
 fi
 
-if [ -f "$PROJECT_ROOT/bin/console" ]; then
-  cPrint status "Symfony console found."
-  # This is a developer image. Enable assert.
-  sudo --preserve-env sed -i 's/^zend\.assertions\s*=\s*-1/zend.assertions = 1/' "$PHP_INI_DIR/php.ini"
-  cPrint info "Asserts were enabled."
-  set +e
-  # Run the command in a subprocess and capture its output
-  output=$(php bin/console --version 2>&1)
-  exit_status=$?
-  set -e
-  # Check if exit status is 255
-  if [ $exit_status -eq 255 ]; then
-    cPrint info "Vendor doesn't seem to be present. Executing a composer install..."
-      composer install --no-interaction --ignore-platform-reqs
-  elif [ $exit_status -eq 0 ]; then
-      cPrint status "Symfony and composer dependencies are installed."
-  else
-      cPrint error "Unknown error while running 'php bin/console'."
-        echo "$output"
-      exit 1
-  fi
-
-  # Check if Symfony commands in the doctrine:cache namespace are available
-  if php bin/console list | grep -q doctrine:cache; then
-    cPrint info "doctrine:cache commands are available. Executing..."
-    cPrint info "doctrine:cache:clear-metadata"
-      time php bin/console doctrine:cache:clear-metadata
-    cPrint info "doctrine:cache:clear-query"
-      time php bin/console doctrine:cache:clear-query
-    cPrint info "doctrine:cache:clear-result"
-      time php bin/console doctrine:cache:clear-result
-    cPrint info "app:cache:clear"
-      time php bin/console app:cache:clear
-  else
-      cPrint info "Symfony's doctrine:cache commands are not available. You are probably using Symfony 7 OR the doctrine cache component is not installed. Skipping..."
-  fi
-
-
-  if [[ "${MIGRATION_ENABLE}" == "true" ]]; then
-      cPrint status "Running migrations"
-      php bin/console doctrine:migrations:migrate --no-interaction
-  fi
-else
-    cPrint info "Symfony console not found, skipping bin/console commands."
-fi
 cPrint info "Cleaning any cache remains..."
 sudo rm -Rf $PROJECT_ROOT/var/cache/*
 
@@ -205,7 +160,6 @@ if [ -n "$STATUS_MESSAGES" ]; then
 else
     echo "No relevant information was logged. Proceeding."
 fi
-
 
 if [ -n "$GIT_USER_NAME" ] && [ "$GIT_USER_NAME" != "" ] && [ -n "$GIT_USER_EMAIL" ] && [ "$GIT_USER_EMAIL" != "" ]; then
     cPrint status "Setting up git username and email..."
