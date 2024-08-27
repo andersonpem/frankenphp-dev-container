@@ -328,10 +328,10 @@ POSTGRES_USER=homestead
 POSTGRES_PASSWORD=secret
 POSTGRES_DB=homestead
 # This is your externally accessible port
-PORT_POSTGRES=5433
+PORT_POSTGRES=$DATABASE_PORT
 
 # Exposed port
-REDIS_HOST_PORT=6380
+REDIS_HOST_PORT=$REDIS_HOST_PORT
 # Container port
 REDIS_PORT=6379
 EOF
