@@ -37,7 +37,7 @@ CODE_ROOT=${CODE_ROOT:-src}
 
 # Ask for PHP version
 echo "Please choose a PHP version"
-PHP_VERSION=$(gum choose --height 15 {8.3,8.2,8.1,8.0})
+PHP_VERSION=$(gum choose --height 15 {8.3,8.2,8.1})
 if [ "$PHP_VERSION" = "user aborted" ]; then
     echo "User aborted PHP version selection, exiting..."
     exit 1
@@ -86,7 +86,7 @@ if gum confirm "Do you want to use a relational DB?"; then
       while [[ -z $DATABASE_VERSION ]]; do
         case "$DATABASE_TYPE" in
           MySQL)
-            DATABASE_VERSION=$(gum choose --height 15 {8.0,latest,5.7})
+            DATABASE_VERSION=$(gum choose --height 15 {8,8.0,9,latest,5.7})
             ;;
           MariaDB)
             DATABASE_VERSION=$(gum choose --height 15 {10.6,10.5,latest})
@@ -169,9 +169,9 @@ fi
 
 # Construct the image tag
 if [ -z "$NODE_VERSION" ] || [ "$NODE_VERSION" == "nodeless" ]; then
-  IMAGE_TAG="phillarmonic/frankenphp-workspace:$FRANKENPHP_VERSION-$PHP_VERSION"
+  IMAGE_TAG="phillarmonic/frankenphp-workspace:$FRANKENPHP_VERSION-php-$PHP_VERSION"
 else
-  IMAGE_TAG="phillarmonic/frankenphp-workspace:$FRANKENPHP_VERSION-$PHP_VERSION-$NODE_VERSION"
+  IMAGE_TAG="phillarmonic/frankenphp-workspace:$FRANKENPHP_VERSION-php-$PHP_VERSION-$NODE_VERSION"
 fi
 
 echo "services:" >> docker-compose.yml
@@ -308,12 +308,12 @@ FIX_FILE_PERMISSIONS_ON_START=true
 
 PHP_IDE_CONFIG="serverName=frankenphp"
 
-XDEBUG_ENABLE=1
+XDEBUG_ENABLE=0
 XDEBUG_START_WITH_REQUEST=yes
 XDEBUG_MODE=debug,develop
 
 # Set your db version here
-DATABASE_VERSION=
+DATABASE_VERSION=$DATABASE_VERSION
 
 # If using mysql and you need to change the data, do it here
 MYSQL_ROOT_PASSWORD=root
@@ -321,7 +321,7 @@ MYSQL_DATABASE=homestead
 MYSQL_USER=admin
 MYSQL_PASSWORD=admin
 # This is your externally accessible port
-PORT_MYSQL=3307
+PORT_MYSQL=$DATABASE_PORT
 
 # If using postgres and you need to change the data, do it here
 POSTGRES_USER=homestead
