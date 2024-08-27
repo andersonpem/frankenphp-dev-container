@@ -33,6 +33,8 @@ LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-
 
 RUN apt update && DEBIAN_FRONTEND=noninteractive apt install apt-utils redis-tools -y
 
+ADD docker/ini/php-extra.ini $PHP_INI_DIR/conf.d/php-extra.ini
+
 RUN set -eux; \
     DEBIAN_FRONTEND=noninteractive \
     apt install sudo openssl libssl-dev\
