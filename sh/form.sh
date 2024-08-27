@@ -37,7 +37,7 @@ CODE_ROOT=${CODE_ROOT:-src}
 
 # Ask for PHP version
 echo "Please choose a PHP version"
-PHP_VERSION=$(gum choose --height 15 {8.3,8.2,8.1})
+PHP_VERSION=$(gum choose --height 15 {8.3,8.2})
 if [ "$PHP_VERSION" = "user aborted" ]; then
     echo "User aborted PHP version selection, exiting..."
     exit 1
