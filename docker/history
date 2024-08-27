@@ -1,5 +1,6 @@
 composer config -g github-oauth.github.com "$COMPOSER_AUTH_GITHUB_TOKEN"
 composer require --dev symfony/profiler-pack
+composer require barryvdh/laravel-debugbar --dev
 rm -rf vendor && rm composer.lock && composer install
 phpunit --stop-on-failure
 pa make:model
@@ -33,6 +34,7 @@ bcs doctrine:schema:validate
 bcs debug:container --env-vars
 bcs debug:container
 composer install
+composer create-project laravel/laravel .
 bcs cache:clear
 bcs debug:router
 bcs doctrine:schema:update
