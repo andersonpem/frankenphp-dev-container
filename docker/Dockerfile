@@ -43,7 +43,7 @@ RUN set -eux; \
     inetutils-ping telnet \
     git unzip curl wget locales \
     python3 python3-pip python3-tqdm \
-    default-mysql-client \
+    default-mysql-client libpq-dev \
     libnss3-tools libnss3 procps htop\
     python3-pyfiglet libevent-dev -y > /dev/null
 
@@ -55,6 +55,7 @@ RUN set -eux; \
     sockets \
     event \
 	pdo_mysql \
+	pdo_pgsql \
 	gd \
 	intl \
 	zip \
