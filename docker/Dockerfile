@@ -40,7 +40,7 @@ RUN set -eux; \
     apt install sudo openssl libssl-dev\
     acl iproute2 figlet apt-transport-https\
     zsh gawk perl bash-completion gnupg \
-    inetutils-ping telnet \
+    inetutils-ping telnet postgresql-client \
     git unzip curl wget locales \
     python3 python3-pip python3-tqdm \
     default-mysql-client libpq-dev \
