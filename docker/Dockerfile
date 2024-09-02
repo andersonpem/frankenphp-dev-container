@@ -9,9 +9,15 @@ FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-bookworm
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+ADD --chmod=0775 https://darkterminal.github.io/turso-php-installer/dist/turso-php-installer.phar /usr/local/bin/turso-php-installer
+
+ARG TARGETARCH
 
 ENV PROJECT_ROOT /var/www/html
 ENV DOCUMENT_ROOT /var/www/html/public
+
+ARG WORKSPACE_VERSION=1.0.0
+ENV WORKSPACE_VERSION=${WORKSPACE_VERSION}
 
 ENV XDEBUG_ENABLE=0
 ENV OPCAHE_ENABLE=0
@@ -31,13 +37,12 @@ LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmai
 LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
 #LABEL org.opencontainers.image.documentation=
 
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt install apt-utils redis-tools -y
-
 ADD docker/ini/php-extra.ini $PHP_INI_DIR/conf.d/php-extra.ini
 
 RUN set -eux; \
+    apt update; \
     DEBIAN_FRONTEND=noninteractive \
-    apt install sudo openssl libssl-dev\
+    apt install apt-utils sudo openssl libssl-dev\
     acl iproute2 figlet apt-transport-https\
     zsh gawk perl bash-completion gnupg \
     inetutils-ping telnet postgresql-client \
@@ -48,9 +53,7 @@ RUN set -eux; \
     python3-pyfiglet libevent-dev -y > /dev/null
 
 RUN set -eux; \
-    docker-php-ext-install sysvmsg sysvsem sysvshm
-
-RUN set -eux; \
+    docker-php-ext-install sysvmsg sysvsem sysvshm; \
     install-php-extensions \
     sockets \
     event \
@@ -63,7 +66,10 @@ RUN set -eux; \
     xdebug \
     ssh2 \
     redis \
-    yaml
+    yaml; \
+    turso-php-installer install; \
+    echo "extension=/root/.turso-client-php/liblibsql_php.so" > ${PHP_INI_DIR}/conf.d/turso-php.ini; \
+    php -m | grep -q libsql
 
 WORKDIR /root
 

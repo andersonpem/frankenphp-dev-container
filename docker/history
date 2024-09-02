@@ -34,6 +34,9 @@ bcs doctrine:schema:validate
 bcs debug:container --env-vars
 bcs debug:container
 composer install
+composer create-project symfony/skeleton .
+composer create-project symfony/skeleton . && composer require webapp
+composer create-project kunstmaan/cms-skeleton .
 composer create-project laravel/laravel .
 bcs cache:clear
 bcs debug:router

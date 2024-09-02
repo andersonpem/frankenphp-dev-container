@@ -32,24 +32,23 @@ echo 'eval "$(symfony-autocomplete --shell=zsh)"' >> ~/.zshrc
 cat <<EOF > "$HOME/.bash_workspace"
 source /opt/includes
 clear
-CONTAINER_VERSION=${CONTAINER_VERSION:-"unknown"}
 
 if [ "$(whoami)" = "docker" ]; then
   figlet "FrankenPHP Workspace"
   cPrint status "Welcome, developer!"
-  if [ -d "$HOME/.ssh" ]; then
+  if [ -d "\$HOME/.ssh" ]; then
     cPrint status "Adding the SSH agent to your container..."
     eval "$(ssh-agent -s)"
       # Find all files in .ssh that start with id_ and do not end with .pub
-      for key in $HOME/.ssh/id_*; do
-          if [[ -f "$key" && ! "$key" =~ \.pub$ ]]; then
-              cPrint info "Adding the SSH key $key, you might be asked for your SSH key password..."
-              ssh-add "$key"
+      for key in \$HOME/.ssh/id_*; do
+          if [[ -f "\$key" && ! "\$key" =~ \.pub$ ]]; then
+              cPrint info "Adding the SSH key \$key, you might be asked for your SSH key password..."
+              ssh-add "\$key"
           fi
       done
     fi
-#    cPrint status "Dev workspace version: \u001b[93m $CONTAINER_VERSION \u001b[0m"
-#    cPrint status "If you are out of date, run \u001b[92m docker compose pull \u001b[0m to get the latest version."
+    cPrint status "Dev workspace version: \u001b[93m \$WORKSPACE_VERSION \u001b[0m"
+    cPrint status "If you are out of date, run \u001b[92m docker compose pull \u001b[0m to get the latest version."
 fi
 EOF
 
@@ -61,17 +60,17 @@ bleopt edit_abell=1
 EOF
 
 # Aliases for both Bash and ZSH
-echo 'source $HOME/.aliases' >> ~/.bashrc && echo 'source $HOME/.aliases' >> ~/.zshrc
+echo "source \$HOME/.aliases" >> ~/.bashrc && echo "source \$HOME/.aliases" >> ~/.zshrc
 
-echo 'source $HOME/.bash_workspace' >> ~/.bashrc && echo 'source $HOME/.bash_workspace' >> ~/.zshrc
+echo "source \$HOME/.bash_workspace" >> ~/.bashrc && echo "source \$HOME/.bash_workspace" >> ~/.zshrc
 
 # SSH and the Docker user
 # Setup SSH directory and known_hosts file
-mkdir -p $HOME/.ssh/ && touch $HOME/.ssh/known_hosts
+mkdir -p "$HOME/.ssh/" && touch "$HOME/.ssh/known_hosts"
 # Makes sure the permissions for SSH are secure
-chmod 700 $HOME/.ssh && chmod 644 $HOME/.ssh/known_hosts
+chmod 700 "$HOME/.ssh" && chmod 644 "$HOME/.ssh/known_hosts"
 # To prevent SSH to break the process of checking out the repository
-# We peeemptively add the GitHub.com public key to the container.
-ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+# We preemptively add the GitHub.com public key to the container.
+ssh-keyscan github.com >> "$HOME/.ssh/known_hosts"
 # Validate the keys for security purposes
-ssh-keygen -lf $HOME/.ssh/known_hosts
+ssh-keygen -lf "$HOME/.ssh/known_hosts"

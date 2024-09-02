@@ -12,6 +12,10 @@ on:
         description: 'FrankenPHP version.'
         required: true
         default: '1.2'
+      workspace_version:
+        description: 'Workspace Container version'
+        required: true
+        default: '1.0.0'
 jobs:
   build_docker_images:
     runs-on: ubuntu-latest
@@ -42,3 +46,4 @@ jobs:
           build-args: |
             PHP_VERSION=${{ github.event.inputs.php_version }}
             FRANKENPHP_VERSION=${{ github.event.inputs.frankenphp_version }}
+            WORKSPACE_VERSION=${{ github.event.inputs.workspace_version }}
