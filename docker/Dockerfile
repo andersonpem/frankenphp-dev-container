@@ -29,7 +29,7 @@ ENV XDEBUG_MODE=debug,develop
 
 # Metadata
 LABEL org.opencontainers.image.title = 'FrankenPHP Workspace'
-LABEL org.opencontainers.image.description = 'The modern PHP app server. With all dev workspace batteries included.'
+LABEL org.opencontainers.image.description = 'The modern PHP dev server. Batteries included.'
 #LABEL org.opencontainers.image.url=
 LABEL org.opencontainers.image.licenses=MIT
 LABEL org.opencontainers.image.vendor = 'AndersonPEM <https://github.com/andersonpem>'
