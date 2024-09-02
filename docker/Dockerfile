@@ -66,10 +66,10 @@ RUN set -eux; \
     xdebug \
     ssh2 \
     redis \
-    yaml; \
-    turso-php-installer install; \
-    echo "extension=/root/.turso-client-php/liblibsql_php.so" > ${PHP_INI_DIR}/conf.d/turso-php.ini; \
-    php -m | grep -q libsql
+    yaml
+#    turso-php-installer install; \
+#    echo "extension=/root/.turso-client-php/liblibsql_php.so" > ${PHP_INI_DIR}/conf.d/turso-php.ini; \
+#    php -m | grep -q libsql
 
 WORKDIR /root
 
