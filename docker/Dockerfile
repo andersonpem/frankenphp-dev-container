@@ -5,8 +5,22 @@ ARG PHP_VERSION=8.3
 ARG APP_ENV=dev
 ARG FRANKENPHP_VERSION=1.2
 
+
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-bookworm
+
+# Metadata
+LABEL org.opencontainers.image.title = 'FrankenPHP Workspace'
+LABEL org.opencontainers.image.description = 'The modern PHP dev server. Batteries included.'
+#LABEL org.opencontainers.image.url=
+LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.vendor = 'AndersonPEM <https://github.com/andersonpem>'
+LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmail.com>'
+LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
+#LABEL org.opencontainers.image.documentation=
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+WORKDIR /root
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 ADD --chmod=0775 https://darkterminal.github.io/turso-php-installer/dist/turso-php-installer.phar /usr/local/bin/turso-php-installer
@@ -26,16 +40,6 @@ ENV XDEBUG_IDEKEY=frankenphp
 ENV FIX_FILE_PERMISSIONS_ON_START=0
 ENV XDEBUG_START_WITH_REQUEST=no
 ENV XDEBUG_MODE=debug,develop
-
-# Metadata
-LABEL org.opencontainers.image.title = 'FrankenPHP Workspace'
-LABEL org.opencontainers.image.description = 'The modern PHP dev server. Batteries included.'
-#LABEL org.opencontainers.image.url=
-LABEL org.opencontainers.image.licenses=MIT
-LABEL org.opencontainers.image.vendor = 'AndersonPEM <https://github.com/andersonpem>'
-LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmail.com>'
-LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
-#LABEL org.opencontainers.image.documentation=
 
 ADD docker/ini/php-extra.ini $PHP_INI_DIR/conf.d/php-extra.ini
 
