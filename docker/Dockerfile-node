@@ -9,6 +9,9 @@ ARG NODE_VERSION=20
 LABEL org.opencontainers.image.title = 'FrankenPHP Workspace with Node.js'
 LABEL org.opencontainers.image.description = 'The modern PHP app server with Node.js. Extended from the base FrankenPHP Workspace.'
 
+#       Shell    options nounset fail      commands
+SHELL ["/bin/bash", "-o", "-u" ,"pipefail", "-c"]
+
 USER root
 
 # Install Node.js

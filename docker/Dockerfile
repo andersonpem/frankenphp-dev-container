@@ -18,12 +18,14 @@ LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmai
 LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
 #LABEL org.opencontainers.image.documentation=
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+#       Shell    options nounset fail      commands
+SHELL ["/bin/bash", "-o", "-u" ,"pipefail", "-c"]
 
 WORKDIR /root
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-ADD --chmod=0775 https://darkterminal.github.io/turso-php-installer/dist/turso-php-installer.phar /usr/local/bin/turso-php-installer
+#Todo: Turso is not thread safe yet. We need to wait for the next release.
+#ADD --chmod=0775 https://darkterminal.github.io/turso-php-installer/dist/turso-php-installer.phar /usr/local/bin/turso-php-installer
 
 ARG TARGETARCH
 
@@ -71,6 +73,8 @@ RUN set -eux; \
     ssh2 \
     redis \
     yaml
+
+# Todo: Turso is not thread safe yet. We need to wait for the next release.
 #    turso-php-installer install; \
 #    echo "extension=/root/.turso-client-php/liblibsql_php.so" > ${PHP_INI_DIR}/conf.d/turso-php.ini; \
 #    php -m | grep -q libsql
