@@ -1,32 +1,16 @@
 #!/usr/bin/env bash
 CURRENT_USER=$(whoami)
+set -euo pipefail
+source /opt/includes
+
 cd $HOME || exit
 
-echo "export LC_ALL=en_US.UTF-8" >> $HOME/.bashrc
-echo "export LANG=en_US.UTF-8" >> $HOME/.bashrc
-
-if [ "$CURRENT_USER" = "root" ]; then
-  echo "export PATH=/root/.config/composer/vendor/bin:$PATH" >> /root/.bashrc
-  echo "export PATH=/root/.config/composer/vendor/bin:$PATH" >> /root/.zshrc
-else
-  echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.bashrc
-  echo "export PATH=/home/$CURRENT_USER/.config/composer/vendor/bin:$PATH" >> /home/$CURRENT_USER/.zshrc
-fi
-
-mkdir -p /home/$CURRENT_USER/.config/composer/vendor/bin
-
-composer global require bamarni/symfony-console-autocomplete > /dev/null
-
-# Ble.sh - Let's help our developers command faster
-wget -O - https://gitlab.com/snippets/2306021/raw | bash > /dev/null
-
-# Symfony Console autocomplete for Bash
-composer global require bamarni/symfony-console-autocomplete > /dev/null \
-  && echo 'eval "$(symfony-autocomplete --shell=bash)"' >> ~/.bashrc
-
-# ZSH goodies for ZSH users
-wget -O - https://gitlab.com/snippets/3622083/raw | bash > /dev/null
-echo 'eval "$(symfony-autocomplete --shell=zsh)"' >> ~/.zshrc
+# These functions are defined in includes.sh
+setup_locale
+setup_path
+install_composer_packages
+install_ble_sh
+install_oh_my_zsh
 
 
 cat <<EOF > "$HOME/.bash_workspace"
@@ -52,12 +36,6 @@ if [ "$(whoami)" = "docker" ]; then
 fi
 EOF
 
-cat <<EOF > "$HOME/.blerc"
-# Ble.sh configuration file
-bleopt char_width_mode=auto
-bleopt input_encoding=UTF-8
-bleopt edit_abell=1
-EOF
 
 # Aliases for both Bash and ZSH
 echo "source \$HOME/.aliases" >> ~/.bashrc && echo "source \$HOME/.aliases" >> ~/.zshrc

@@ -18,8 +18,8 @@ LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmai
 LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
 #LABEL org.opencontainers.image.documentation=
 
-#       Shell    options nounset fail      commands
-SHELL ["/bin/bash", "-o", "-u" ,"pipefail", "-c"]
+#       Shell    nounset options fail      commands
+SHELL ["/bin/bash", "-u", "-o", "pipefail", "-c"]
 
 WORKDIR /root
 
@@ -121,8 +121,7 @@ USER docker
 WORKDIR /home/docker
 ADD docker/sh/aliases.sh .aliases
 ENV COMPOSER_HOME="/home/docker/.config/composer"
-RUN setup_env \
-    && composer global require laravel/installer
+RUN setup_env
 
 USER root
 # Allow the user Docker to bind to http ports
