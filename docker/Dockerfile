@@ -18,8 +18,8 @@ LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmai
 LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
 #LABEL org.opencontainers.image.documentation=
 
-#       Shell    nounset options fail      commands
-SHELL ["/bin/bash", "-u", "-o", "pipefail", "-c"]
+#       Shell     options fail      commands
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR /root
 
