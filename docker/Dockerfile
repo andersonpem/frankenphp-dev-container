@@ -97,6 +97,7 @@ WORKDIR /root
 
 ADD docker/sh/aliases.sh .aliases
 ADD docker/sh/includes.sh /opt/includes
+ADD --chmod=0755 docker/sh/phpunit /usr/local/bin/phpunit
 ADD --chmod=0755 docker/sh/setup_env.sh /usr/local/bin/setup_env
 ADD --chmod=0755 docker/sh/lsoct.sh /usr/local/bin/lsoct
 ADD --chmod=0755 docker/py/permissions.py /usr/local/bin/webpermissions

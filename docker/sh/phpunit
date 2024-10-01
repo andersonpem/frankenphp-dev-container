@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Try to locate PHPUnit in common paths
+if [ -f "./bin/phpunit" ]; then
+    PHPUNIT="./bin/phpunit"
+elif [ -f "./vendor/bin/phpunit" ]; then
+    PHPUNIT="./vendor/bin/phpunit"
+elif [ -f "$COMPOSER_HOME/vendor/bin/phpunit" ]; then
+    PHPUNIT="$COMPOSER_HOME/vendor/bin/phpunit"
+elif [ -f "$HOME/.composer/vendor/bin/phpunit" ]; then
+    PHPUNIT="$HOME/.composer/vendor/bin/phpunit"
+else
+    echo "PHPUnit not found in ./bin/phpunit, ./vendor/bin/phpunit, or global Composer directories."
+    exit 1
+fi
+
+# Execute PHPUnit with all the passed arguments
+$PHPUNIT "$@"

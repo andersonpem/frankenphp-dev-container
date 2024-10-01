@@ -2,7 +2,6 @@ alias bcs="php bin/console"
 alias cda="composer dump-autoload"
 alias dumpvars="composer dump-env $APP_ENV"
 alias cachereset="bin/console doctrine:cache:clear-metadata && bin/console doctrine:cache:clear-query && bin/console doctrine:cache:clear-result && bin/console app:cache:clear && sudo rm -Rf $PROJECT_ROOT/var/cache/*"
-alias phpunit="php bin/phpunit"
 alias pa="php artisan"
 aliases_help() {
     echo -e "${cl_info}Helper aliases:${cl_reset}"
