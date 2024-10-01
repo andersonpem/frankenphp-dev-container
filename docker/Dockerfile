@@ -57,12 +57,13 @@ ENV PHP_IDE_CONFIG="serverName=frankenphp"
 ENV FIX_FILE_PERMISSIONS_ON_START=0
 ENV XDEBUG_START_WITH_REQUEST=no
 
+RUN apt update && apt install apt-utils  apt-transport-https -y
+
 ADD docker/ini/php-extra.ini $PHP_INI_DIR/conf.d/php-extra.ini
 
 RUN set -eux; \
-    apt update; \
     DEBIAN_FRONTEND=noninteractive \
-    apt install apt-utils sudo openssl libssl-dev\
+    apt install sudo openssl libssl-dev\
     acl iproute2 figlet apt-transport-https\
     zsh gawk perl bash-completion gnupg \
     inetutils-ping telnet postgresql-client \
