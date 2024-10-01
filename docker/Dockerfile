@@ -71,7 +71,7 @@ RUN set -eux; \
     python3 python3-pip python3-tqdm \
     default-mysql-client libpq-dev \
     libnss3-tools libnss3 procps htop\
-    python3-pyfiglet libevent-dev -y > /dev/null
+    python3-pyfiglet libevent-dev -y
 
 RUN set -eux; \
     docker-php-ext-install sysvmsg sysvsem sysvshm; \
