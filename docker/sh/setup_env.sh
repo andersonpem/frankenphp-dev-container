@@ -17,6 +17,10 @@ cat <<EOF > "$HOME/.bash_workspace"
 source /opt/includes
 clear
 
+if [ "$(whoami)" = "root" ] && [ -t 0 ]; then
+    exec gosu docker bash
+fi
+
 if [ "$(whoami)" = "docker" ]; then
   figlet "FrankenPHP Workspace"
   cPrint status "Welcome, developer!"
@@ -32,7 +36,7 @@ if [ "$(whoami)" = "docker" ]; then
       done
     fi
     cPrint status "Dev workspace version: \u001b[93m \$WORKSPACE_VERSION \u001b[0m"
-    cPrint status "If you are out of date, run \u001b[92m docker compose pull \u001b[0m to get the latest version."
+    cPrint status "If you are out of date, exit this container and run \u001b[92m docker compose pull \u001b[0m to get the latest version."
 fi
 EOF
 
