@@ -177,10 +177,11 @@ cPrint info "FrankenPHP version on this container: $FRANKENPHP_VERSION"
 
 cPrint status "FrankenPHP will now start..."
 
-# first arg is `-f` or `--some-option`
-if [ "${1#-}" != "$1" ]; then
-       gosu docker set -- frankenphp run "$@"
-fi
+## first arg is `-f` or `--some-option`
+#if [ "${1#-}" != "$1" ]; then
+#       gosu docker set -- frankenphp run "$@"
+#fi
+#
+#gosu docker exec "$@"
 
-gosu docker exec "$@"
-
+gosu docker frankenphp run --config /etc/caddy/Caddyfile --adapter caddyfile
