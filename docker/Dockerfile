@@ -8,12 +8,12 @@ ARG FRANKENPHP_VERSION=1.3
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-bookworm
 
 # Metadata
-LABEL org.opencontainers.image.title = 'FrankenPHP Workspace'
-LABEL org.opencontainers.image.description = 'The modern PHP dev server. Batteries included.'
+LABEL org.opencontainers.image.title='FrankenPHP Workspace'
+LABEL org.opencontainers.image.description='The modern PHP dev server. Batteries included.'
 #LABEL org.opencontainers.image.url=
 LABEL org.opencontainers.image.licenses=MIT
-LABEL org.opencontainers.image.vendor = 'AndersonPEM <https://github.com/andersonpem>'
-LABEL org.opencontainers.image.authors = 'Anderson Souza <sza.andersonsilva@gmail.com>'
+LABEL org.opencontainers.image.vendor='AndersonPEM <https://github.com/andersonpem>'
+LABEL org.opencontainers.image.authors='Anderson Souza <sza.andersonsilva@gmail.com>'
 LABEL org.opencontainers.image.source=https://github.com/andersonpem/frankenphp-dev-container
 #LABEL org.opencontainers.image.documentation=
 
@@ -28,8 +28,8 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 
 ARG TARGETARCH
 
-ENV PROJECT_ROOT /var/www/html
-ENV DOCUMENT_ROOT /var/www/html/public
+ENV PROJECT_ROOT=/var/www/html
+ENV DOCUMENT_ROOT=/var/www/html/public
 
 ARG WORKSPACE_VERSION=1.0.0
 ENV WORKSPACE_VERSION=${WORKSPACE_VERSION}
@@ -58,12 +58,10 @@ ENV XDEBUG_START_WITH_REQUEST=no
 
 RUN apt update && apt install apt-utils  apt-transport-https -y
 
-ADD docker/ini/php-extra.ini $PHP_INI_DIR/conf.d/php-extra.ini
-
 RUN set -eux; \
     DEBIAN_FRONTEND=noninteractive \
     apt install sudo openssl libssl-dev\
-    acl iproute2 figlet apt-transport-https\
+    acl iproute2 figlet apt-transport-https libssh2-1-dev libssh2-1 \
     zsh gawk perl bash-completion gnupg \
     inetutils-ping telnet postgresql-client \
     git unzip curl wget locales \
@@ -150,6 +148,7 @@ ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workspace
 ADD --chmod=600 --chown=docker docker/history /home/docker/.bash_history
 ADD --chmod=600 --chown=docker docker/history /home/docker/.zsh_history
 
+ADD docker/ini/php-extra.ini $PHP_INI_DIR/conf.d/php-extra.ini
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 ADD ./docker/Caddyfile /etc/caddy/Caddyfile
