@@ -168,12 +168,19 @@ if [ -n "$GIT_USER_NAME" ] && [ "$GIT_USER_NAME" != "" ] && [ -n "$GIT_USER_EMAI
     cPrint success "Git username and email set."
 fi
 
+cPrint info "Making sure the FrankenPHP folders permissions are okay..."
+chown -R docker:docker /config/caddy
+chown -R docker:docker /data/caddy
+
+FRANKENPHP_VERSION=$(gosu docker frankenphp version)
+cPrint info "FrankenPHP version on this container: $FRANKENPHP_VERSION"
+
 cPrint status "FrankenPHP will now start..."
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
-        set -- frankenphp run "$@"
+       gosu docker set -- frankenphp run "$@"
 fi
 
-exec "$@"
+gosu docker exec "$@"
 

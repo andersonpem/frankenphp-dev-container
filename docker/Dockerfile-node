@@ -30,7 +30,7 @@ RUN mkdir -p /home/docker/node_modules && \
 USER root
 
 # Reset to docker user
-USER docker
+USER root
 WORKDIR ${PROJECT_ROOT}
 
 # The ENTRYPOINT and CMD remain the same as they were inherited from the base image

@@ -3,8 +3,7 @@
 # Necessary Build Arguments
 ARG PHP_VERSION=8.3
 ARG APP_ENV=dev
-ARG FRANKENPHP_VERSION=1.2
-
+ARG FRANKENPHP_VERSION=1.3
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-bookworm
 
@@ -71,7 +70,7 @@ RUN set -eux; \
     python3 python3-pip python3-tqdm \
     default-mysql-client libpq-dev \
     libnss3-tools libnss3 procps htop\
-    python3-pyfiglet libevent-dev -y
+    python3-pyfiglet libevent-dev gosu -y
 
 RUN set -eux; \
     docker-php-ext-install sysvmsg sysvsem sysvshm; \
@@ -157,8 +156,7 @@ ADD ./docker/Caddyfile /etc/caddy/Caddyfile
 
 RUN chown -R docker:docker ${PROJECT_ROOT}
 
-USER docker
+USER root
 WORKDIR ${PROJECT_ROOT}
 
 ENTRYPOINT ["/usr/local/bin/frankenphp-workspace"]
-CMD ["--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
