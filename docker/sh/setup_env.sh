@@ -35,6 +35,7 @@ if [ "$(whoami)" = "docker" ]; then
           fi
       done
     fi
+    echo "🍎 now with better Apple Silicon Support. By AndersonPEM. =D"
     cPrint status "Dev workspace version: \u001b[93m \$WORKSPACE_VERSION \u001b[0m"
     cPrint status "If you are out of date, exit this container and run \u001b[92m docker compose pull \u001b[0m to get the latest version."
 fi
