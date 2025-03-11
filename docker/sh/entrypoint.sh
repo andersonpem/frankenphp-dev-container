@@ -26,7 +26,7 @@ if [[ "$DOCKER_USER" == "" ]]; then
     set +e
     mkdir -p testing_file_system_rights.foo
     chmod 700 testing_file_system_rights.foo
-    sudo touch testing_file_system_rights.foo/somefile > /dev/null 2>&1
+    touch testing_file_system_rights.foo/somefile > /dev/null 2>&1
 
     HAS_CONSISTENT_RIGHTS=$?
 
@@ -71,7 +71,7 @@ DOCKER_USER_ID=$(id -ur "$DOCKER_USER")
 # Fix access rights to stdout and stderr
 echo "Setting up std* permissions..."
 set +e
-sudo chown "$DOCKER_USER" /proc/self/fd/{1,2}
+chown "$DOCKER_USER" /proc/self/fd/{1,2}
 set -e
 # |-----------------------------------------------------------------------------
 # | File permissions
@@ -89,8 +89,8 @@ set -e
 # |
 
 cPrint status "Checking proper file permissions..."
-cPrint info "Setting file ownership, please be patient... PROJECT_ROOT: $PROJECT_ROOT"
-sudo chown -R $DOCKER_USER:$DOCKER_USER "$PROJECT_ROOT"
+#cPrint info "Setting file ownership, please be patient... PROJECT_ROOT: $PROJECT_ROOT"
+#chown -R $DOCKER_USER:$DOCKER_USER "$PROJECT_ROOT"
 
 # Check if the project root is empty
 if [ -z "$(ls -A $PROJECT_ROOT)" ]; then
@@ -99,22 +99,22 @@ else
   if [ -n "$FIX_FILE_PERMISSIONS_ON_START" ] && [ "$FIX_FILE_PERMISSIONS_ON_START" = "1" ]; then
     # This part is cool, change the permissions only if they're not set already.
     cPrint status "Setting file permissions, please be patient..."
-    sudo webpermissions $PROJECT_ROOT
+    webpermissions $PROJECT_ROOT
   fi
 
   # Let's make sure the var folder is writable by the web server.
   cPrint status "Setting var folder permissions..."
   if [ -d "$PROJECT_ROOT/var" ]; then
-    sudo chown -R docker "$PROJECT_ROOT/var"
-    sudo chmod -R 775 "$PROJECT_ROOT/var"
+    chown -R docker "$PROJECT_ROOT/var"
+    chmod -R 775 "$PROJECT_ROOT/var"
   else
-    sudo mkdir -m 775 "$PROJECT_ROOT/var"
-    sudo chown docker "$PROJECT_ROOT/var"
+    mkdir -m 775 "$PROJECT_ROOT/var"
+    chown docker "$PROJECT_ROOT/var"
   fi
 fi
 
 # Bin utilities should be executable
-[ -d "$PROJECT_ROOT/bin" ] && sudo chmod +x "$PROJECT_ROOT/bin"/*
+[ -d "$PROJECT_ROOT/bin" ] && chmod +x "$PROJECT_ROOT/bin"/*
 
 # |-----------------------------------------------------------------------------
 # | Extra extensions
@@ -126,7 +126,7 @@ fi
 
 if [ -n "$XDEBUG_ENABLE" ] && [ "$XDEBUG_ENABLE" = "1" ]; then
   cPrint status "Env asks to enable XDebug, proceeding to enable..."
-  sudo --preserve-env bash -c 'cat <<EOF > $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+  bash -c 'cat <<EOF > $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 zend_extension=xdebug.so
 [xdebug]
 xdebug.mode = ${XDEBUG_MODE:-debug,develop}
@@ -141,17 +141,17 @@ EOF'
   add_status_message "XDebug is enabled! \nPHP_IDE_CONFIG: ${cl_info}$PHP_IDE_CONFIG${cl_reset} \n XDEBUG_IDEKEY: ${cl_info}$XDEBUG_IDEKEY \n ${cl_info}Make sure to set up your PHPStorm/VS code Accordingly.${cl_reset} "
   if [ -f "$PHP_INI_DIR/conf.d/opcache.ini" ]; then
     add_status_message "!!!! XDebug is ENABLED. This will $cl_error DISABLE OPCACHE even if it's set to be active! $cl_reset !!!!"
-    sudo rm -f "$PHP_INI_DIR/conf.d/opcache.ini"
+    rm -f "$PHP_INI_DIR/conf.d/opcache.ini"
   fi
 
 else
-  sudo --preserve-env rm -f "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini"
+  rm -f "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini"
   cPrint status "$cl_info XDebug is disabled$cl_reset. To enable it, set the environment variable XDEBUG_ENABLE to 1"
   add_status_message "XDebug is disabled. To enable it, set XDEBUG_ENABLE to 1"
 fi
 
 cPrint info "Cleaning any cache remains..."
-sudo rm -Rf $PROJECT_ROOT/var/cache/*
+rm -Rf $PROJECT_ROOT/var/cache/*
 
 
 if [ -n "$STATUS_MESSAGES" ]; then

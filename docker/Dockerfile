@@ -3,7 +3,7 @@
 # Necessary Build Arguments
 ARG PHP_VERSION=8.3
 ARG APP_ENV=dev
-ARG FRANKENPHP_VERSION=1.3
+ARG FRANKENPHP_VERSION=1.4
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-bookworm
 
@@ -23,8 +23,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /root
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-#Todo: Turso is not thread safe yet. We need to wait for the next release.
-#ADD --chmod=0775 https://darkterminal.github.io/turso-php-installer/dist/turso-php-installer.phar /usr/local/bin/turso-php-installer
 
 ARG TARGETARCH
 
@@ -59,16 +57,25 @@ ENV XDEBUG_START_WITH_REQUEST=no
 RUN apt update && apt install apt-utils  apt-transport-https -y
 
 RUN set -eux; \
-    DEBIAN_FRONTEND=noninteractive \
-    apt install sudo openssl libssl-dev\
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    sudo openssl libssl-dev openssh-client \
     acl iproute2 figlet apt-transport-https libssh2-1-dev libssh2-1 \
     zsh gawk perl bash-completion gnupg \
     inetutils-ping telnet postgresql-client \
     git unzip curl wget locales \
     python3 python3-pip python3-tqdm \
     default-mysql-client libpq-dev \
-    libnss3-tools libnss3 procps htop\
-    python3-pyfiglet libevent-dev gosu -y
+    libnss3-tools libnss3 procps htop \
+    python3-pyfiglet libevent-dev gosu \
+    build-essential autoconf libtool pkg-config \
+    libxml2-dev libcurl4-openssl-dev zlib1g-dev libonig-dev \
+    libreadline-dev libsqlite3-dev libc-dev;
+
+ENV COMPOSER_HOME=/root/.composer
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+#RUN set -eux; composer global require darkterminal/turso-php-installer; \
+#        $COMPOSER_HOME/vendor/bin/turso-php-installer install -n --thread-safe; \
+#        php -m | grep -q libsql
 
 RUN set -eux; \
     docker-php-ext-install sysvmsg sysvsem sysvshm; \
@@ -86,11 +93,6 @@ RUN set -eux; \
     redis \
     yaml
 
-# Todo: Turso is not thread safe yet. We need to wait for the next release.
-#    turso-php-installer install; \
-#    echo "extension=/root/.turso-client-php/liblibsql_php.so" > ${PHP_INI_DIR}/conf.d/turso-php.ini; \
-#    php -m | grep -q libsql
-
 WORKDIR /root
 
 ADD docker/sh/aliases.sh .aliases
@@ -100,7 +102,6 @@ ADD --chmod=0755 docker/sh/setup_env.sh /usr/local/bin/setup_env
 ADD --chmod=0755 docker/sh/lsoct.sh /usr/local/bin/lsoct
 ADD --chmod=0755 docker/py/permissions.py /usr/local/bin/webpermissions
 
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 # |--------------------------------------------------------------------------
 # | The Docker user

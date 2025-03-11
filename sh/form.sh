@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FRANKENPHP_VERSION="1.2"
+FRANKENPHP_VERSION="1.4"
 
 handle_sigint() {
     echo "Received SIGINT, exiting..."
