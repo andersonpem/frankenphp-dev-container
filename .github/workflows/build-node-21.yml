@@ -7,11 +7,11 @@ on:
       php_version:
         description: 'PHP version.'
         required: true
-        default: '8.3'
+        default: '8.4'
       frankenphp_version:
         description: 'FrankenPHP version.'
         required: true
-        default: '1.2'
+        default: '1.9'
 jobs:
   build_docker_images:
     runs-on: ubuntu-latest
