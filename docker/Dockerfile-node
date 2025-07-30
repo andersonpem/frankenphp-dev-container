@@ -1,6 +1,6 @@
 # FrankenPHP Workspace with Node.js
-ARG FRANKENPHP_VERSION=1.2
-ARG PHP_VERSION=8.3
+ARG FRANKENPHP_VERSION=1.9
+ARG PHP_VERSION=8.4
 # Use the base PHP Dockerfile as the starting point
 FROM phillarmonic/frankenphp-workspace:${FRANKENPHP_VERSION}-php-${PHP_VERSION}
 ARG NODE_VERSION=20

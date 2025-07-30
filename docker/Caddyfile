@@ -1,22 +1,42 @@
 {
 	auto_https off
-	admin off 
+	admin off
+	metrics
+
+	servers {
+		trusted_proxies static private_ranges
+		protocols h2c h2 h1
+		enable_full_duplex
+	}
+
 	{$CADDY_GLOBAL_OPTIONS}
 
 	frankenphp {
 		#worker /path/to/your/worker.php
 		{$FRANKENPHP_CONFIG}
+		#    Todo dynamically load these on start
+		#		php_ini {
+		#			memory_limit {$PHP_INI_MEMORY_LIMIT}
+		#			error_reporting {$PHP_INI_ERROR_REPORTING}
+		#			max_execution_time {$PHP_INI_MAX_EXECUTION_TIME}
+		#			display_errors {$PHP_INI_DISPLAY_ERRORS}
+		#			upload_max_filesize {$PHP_INI_UPLOAD_MAX_FILESIZE}
+		#			post_max_size {$PHP_INI_POST_MAX_SIZE}
+		#			variables_order {$PHP_INI_VARIABLES_ORDER}
+		#		}
 	}
 
 	# https://caddyserver.com/docs/caddyfile/directives#sorting-algorithm
 	order mercure after encode
 	order vulcain after reverse_proxy
+	order reverse_proxy before php_server
 	order php_server before file_server
 	order php before file_server
 
 	log {
 		output stdout
 		format console
+		level WARN
 	}
 }
 
@@ -50,9 +70,13 @@
 
 	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 
-	php_server
+	php_server {
+		try_files {path} index.php
+	}
+
 	log {
 		output stdout
 		format console
+		level WARN
 	}
 }
