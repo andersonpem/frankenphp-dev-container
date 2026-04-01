@@ -11,7 +11,7 @@ on:
       frankenphp_version:
         description: 'FrankenPHP version.'
         required: true
-        default: '1.9'
+        default: '1.12'
 jobs:
   build_docker_images:
     runs-on: ubuntu-latest

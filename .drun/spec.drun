@@ -1,0 +1,35 @@
+# drun (do-run) CLI is a fast, semantic task runner with 
+# its own powerful automation language. Effortless tasks, serious speed.
+# Learn more at https://github.com/phillarmonic/drun
+
+version: 2.0
+
+project "frankenphp-dev-container" version "1.0":
+    before any task:
+        echo "Checking requirements..."
+        if docker is available:
+            success "Docker detected"
+        else:
+            fail "Docker insn't installed or available. You cannot build without Docker."
+
+
+task "default" means "Default task":
+	info "This is the local automation file for the container environment 🚀"
+
+task "build-local" means "Builds for local usage":
+	requires $php from ["8.2", "8.3", "8.4"]
+	given $node as boolean defaults to "n"
+	given $node-version defaults to "24"
+	given $frankenphp-version defaults to "1.12"
+	step "Building locally to {$php} {$node ? 'with Node v{$node-version}' : ''}"
+	let $tag="andersonpem/frankenphp-dev-container:php{$php}{$node ? '-node-{$node-version}' : ''}-local"
+    info "Tag: {$tag}"
+    if not {$node}:
+        run "docker build -f docker/Dockerfile --build-arg PHP_VERSION={$php} --build-arg FRANKENPHP_VERSION={$frankenphp-version} -t {$tag} ."
+        success "Build successful. Use the following tag for using this image:"
+        step "{$tag}"
+    else:
+        run "docker build -f docker/Dockerfile-node --build-arg PHP_VERSION={$php} --build-arg FRANKENPHP_VERSION={$frankenphp-version} --build-arg NODE_VERSION={$node-version} -t {$tag} ."
+        success "Build successful. Use the following tag for using this image:"
+        step "{$tag}"
+

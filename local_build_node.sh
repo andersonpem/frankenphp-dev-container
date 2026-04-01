@@ -15,7 +15,7 @@ docker buildx build \
   --build-arg NODE_VERSION=18 \
   --build-arg PHP_VERSION=8.2 \
   --platform linux/amd64,linux/arm64 \
-  --tag phillarmonic/frankenphp-workspace:1.4-php-8.2-node-18\
+  --tag phillarmonic/frankenphp-workspace:1.12-php-8.2-node-18\
   --file docker/Dockerfile-node \
   --push .
 
@@ -24,7 +24,7 @@ docker buildx build \
   --build-arg NODE_VERSION=18 \
   --build-arg PHP_VERSION=8.3 \
   --platform linux/amd64,linux/arm64 \
-  --tag phillarmonic/frankenphp-workspace:1.4-php-8.2-node-18\
+  --tag phillarmonic/frankenphp-workspace:1.12-php-8.2-node-18\
   --file docker/Dockerfile-node \
   --push .
 ######
@@ -34,7 +34,7 @@ docker buildx build \
   --build-arg NODE_VERSION=20 \
   --build-arg PHP_VERSION=8.2 \
   --platform linux/amd64,linux/arm64 \
-  --tag phillarmonic/frankenphp-workspace:1.4-php-8.2-node-18\
+  --tag phillarmonic/frankenphp-workspace:1.12-php-8.2-node-18\
   --file docker/Dockerfile-node \
   --push .
 
@@ -43,7 +43,7 @@ docker buildx build \
   --build-arg NODE_VERSION=20 \
   --build-arg PHP_VERSION=8.3 \
   --platform linux/amd64,linux/arm64 \
-  --tag phillarmonic/frankenphp-workspace:1.4-php-8.2-node-18\
+  --tag phillarmonic/frankenphp-workspace:1.12-php-8.2-node-18\
   --file docker/Dockerfile-node \
   --push .
 
@@ -54,7 +54,7 @@ docker buildx build \
   --build-arg NODE_VERSION=21 \
   --build-arg PHP_VERSION=8.2 \
   --platform linux/amd64,linux/arm64 \
-  --tag phillarmonic/frankenphp-workspace:1.4-php-8.2-node-18\
+  --tag phillarmonic/frankenphp-workspace:1.12-php-8.2-node-18\
   --file docker/Dockerfile-node \
   --push .
 
@@ -63,7 +63,7 @@ docker buildx build \
   --build-arg NODE_VERSION=21 \
   --build-arg PHP_VERSION=8.3 \
   --platform linux/amd64,linux/arm64 \
-  --tag phillarmonic/frankenphp-workspace:1.4-php-8.2-node-18\
+  --tag phillarmonic/frankenphp-workspace:1.12-php-8.2-node-18\
   --file docker/Dockerfile-node \
   --push .
 

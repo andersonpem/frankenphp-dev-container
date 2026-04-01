@@ -3,7 +3,7 @@
 # Necessary Build Arguments
 ARG PHP_VERSION=8.4
 ARG APP_ENV=dev
-ARG FRANKENPHP_VERSION=1.9
+ARG FRANKENPHP_VERSION=1.12
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-bookworm
 
@@ -95,6 +95,12 @@ RUN set -eux; \
     redis \
     yaml
 
+# PHP 8.5 Doesn't yet support Phalcon
+RUN set -eux; \
+    if [ "$PHP_VERSION" != "8.5" ]; then \
+        install-php-extensions phalcon; \
+    fi
+
 WORKDIR /root
 
 ADD docker/sh/aliases.sh .aliases
@@ -145,7 +151,6 @@ ARG USER=docker
 RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp \
 # Permissions to write in the Caddy directories
     && chown -R docker:docker /data/caddy && chown -R docker:docker /config/caddy
-
 # Add the entrypoint
 ADD --chmod=0755 docker/sh/entrypoint.sh /usr/local/bin/frankenphp-workspace
 ADD --chmod=600 --chown=docker docker/history /home/docker/.bash_history
