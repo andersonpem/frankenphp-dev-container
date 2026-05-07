@@ -95,11 +95,11 @@ RUN set -eux; \
     redis \
     yaml
 
-# PHP 8.5 Doesn't yet support Phalcon
-RUN set -eux; \
-    if [ "$PHP_VERSION" != "8.5" ]; then \
-        install-php-extensions phalcon; \
-    fi
+## PHP 8.5 Doesn't yet support Phalcon
+#RUN set -eux; \
+#    if [ "$PHP_VERSION" != "8.5" ]; then \
+#        install-php-extensions phalcon; \
+#    fi
 
 WORKDIR /root
 
